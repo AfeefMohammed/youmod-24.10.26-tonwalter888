@@ -33,35 +33,29 @@ on:
       youpip:
         description: "Integrate YouPiP"
         default: true
-        required: false
-        type: boolean
-
-      ytuhd:
-        description: "Integrate YTUHD"
-        default: true
-        required: false
-        type: boolean
-
-      ryd:
-        description: "Integrate Return-YouTube-Dislikes"
-        default: true
-        required: false
-        type: boolean
-
-      abconfig:
-        description: "Integrate YTABConfig"
-        default: true
-        required: false
+        required: true
         type: boolean
 
       youquality:
         description: "Integrate YouQuality"
-        default: false
-        required: false
+        default: true
+        required: true
         type: boolean
 
-      demc:
-        description: "Integrate DontEatMyContent"
+      ytflags:
+        description: "YTFlags"
+        type: boolean
+        required: true
+        default: true
+
+      youspeed:
+        description: "YouSpeed"
+        type: boolean
+        required: true
+        default: true
+
+      youslider:
+        description: "Integrate YouSlider"
         default: true
         required: false
         type: boolean
@@ -72,18 +66,18 @@ on:
         required: false
         type: boolean
 
-      youslider:
-        description: "Integrate YouSlider"
+      showendtime:
+        description: "Integrate Show End Time"
+        type: boolean
+        required: true
+        default: true
+
+      abconfig:
+        description: "Integrate YTABConfig"
         default: true
         required: false
         type: boolean
-
-      gonerino:
-        description: "Integrate Gonerino"
-        default: true
-        required: false
-        type: boolean
-
+      
       ytshare:
         description: "Integrate youtube-native-share"
         default: true
@@ -93,6 +87,30 @@ on:
       volboost:
         description: "Integrate VolumeBoostYT (Require iOS 16+)"
         default: true
+        required: false
+        type: boolean
+
+      demc:
+        description: "Integrate DontEatMyContent (Keep disabled currently commented out)"
+        default: false
+        required: false
+        type: boolean
+
+      ryd:
+        description: "Integrate Return-YouTube-Dislikes (Keep disabled currently commented out)"
+        default: false
+        required: true
+        type: boolean
+
+      ytuhd:
+        description: "Integrate YTUHD"
+        default: false
+        required: false
+        type: boolean
+
+      gonerino:
+        description: "Integrate Gonerino"
+        default: false
         required: false
         type: boolean
 
@@ -111,7 +129,7 @@ jobs:
       - name: Hide Sensitive Inputs
         uses: levibostian/action-hide-sensitive-inputs@v1
         with:
-          exclude_inputs: bundle_id,display_name,youpip,ytuhd,ryd,abconfig,ytweaks,youslider,gonerino,demc,volboost,repo,branch,youquality
+          exclude_inputs: bundle_id,display_name,youpip,ytuhd,ryd,abconfig,ytweaks,youslider,gonerino,demc,volboost,repo,branch,youquality,ytshare,ytflags,youspeed,showendtime
           
       - name: Install MEGA downloader
         if: ${{ startsWith(inputs.ipa_url, 'https://mega.nz/') }}
@@ -232,14 +250,31 @@ jobs:
       - name: Clone YouPiP
         if: ${{ inputs.youpip }}
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouPiP.git
+
+      - name: Clone YouQuality
+        if: ${{ inputs.youquality }}
+        run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouQuality.git
+
+      - name: Clone YTFlags
+        if: ${{ inputs.ytflags }}
+        run: git clone --quiet --depth=1 https://github.com/Tonwalter888/YTFlags.git
+
+      - name: Clone YouSpeed
+        if: ${{ inputs.youspeed }}
+        run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouSpeed.git
+
+      - name: Clone ShowEndTime
+        if: ${{ inputs.showendtime }}
+        run: git clone --quiet --depth=1 https://github.com/AfeefMohammed/ShowEndTime.git
+
     
-      - name: Clone YTUHD
-        if: ${{ inputs.ytuhd }}
-        run: git clone --quiet --depth=1 --recurse-submodules https://github.com/PoomSmart/YTUHD.git
+      #- name: Clone YTUHD
+        #if: ${{ inputs.ytuhd }}
+        #run: git clone --quiet --depth=1 --recurse-submodules https://github.com/PoomSmart/YTUHD.git
            
-      - name: Clone Return-YouTube-Dislikes
-        if: ${{ inputs.ryd }}
-        run: git clone --quiet --depth=1 https://github.com/PoomSmart/Return-YouTube-Dislikes.git
+      #- name: Clone Return-YouTube-Dislikes
+        #if: ${{ inputs.ryd }}
+        #run: git clone --quiet --depth=1 https://github.com/PoomSmart/Return-YouTube-Dislikes.git
 
       - name: Clone YouGroupSettings
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouGroupSettings.git
@@ -255,9 +290,9 @@ jobs:
       - name: Clone UncappedAVPlayer
         run: git clone --quiet --depth=1 https://github.com/PoomSmart/UncappedAVPlayer.git
 
-      - name: Clone DontEatMyContent
-        if: ${{ inputs.demc }}
-        run: git clone --quiet --depth=1 https://github.com/therealFoxster/DontEatMyContent.git
+      #- name: Clone DontEatMyContent
+        #if: ${{ inputs.demc }}
+        #run: git clone --quiet --depth=1 https://github.com/therealFoxster/DontEatMyContent.git
 
       - name: Clone YouSlider
         if: ${{ inputs.youslider }}
@@ -269,21 +304,20 @@ jobs:
         if: ${{ inputs.ytweaks }}
         run: git clone --quiet --depth=1 https://github.com/fosterbarnes/YTweaks.git
 
-      - name: Clone Gonerino
-        if: ${{ inputs.gonerino }}
-        run: git clone --quiet --depth=1 https://github.com/castdrian/Gonerino.git
+      #- name: Clone Gonerino
+        #if: ${{ inputs.gonerino }}
+        #run: git clone --quiet --depth=1 https://github.com/castdrian/Gonerino.git
 
       - name: Clone youtube-native-share
         if: ${{ inputs.ytshare }}
         run: git clone --quiet --depth=1 https://github.com/jkhsjdhjs/youtube-native-share.git
+        
+      - name: Clone YouShare
+        run: git clone --quiet --depth=1 https://github.com/Tonwalter888/YouShare.git
 
       - name: Clone VolumeBoostYT
         if: ${{ inputs.volboost }}
         run: git clone --quiet --depth=1 https://github.com/VasirakCalgux/VolumeBoostYT.git
-
-      - name: Clone YouQuality
-        if: ${{ inputs.youquality }}
-        run: git clone --quiet --depth=1 https://github.com/PoomSmart/YouQuality.git
 
       - name: Build YouMod
         run: |
@@ -299,21 +333,21 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/youpip.deb
 
-      - name: Build YTUHD
-        if: ${{ inputs.ytuhd }}
-        run: |
-          cd YTUHD
-          brew install meson ninja
-          make libvpx dav1d
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless SIDELOAD=1
-          mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
+      #- name: Build YTUHD
+        #if: ${{ inputs.ytuhd }}
+        #run: |
+          #cd YTUHD
+          #brew install meson ninja
+          #make libvpx dav1d
+          #make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless SIDELOAD=1
+          #mv packages/*.deb ${{ github.workspace }}/ytuhd.deb
 
-      - name: Build Return-YouTube-Dislikes
-        if: ${{ inputs.ryd }}
-        run: |
-          cd Return-YouTube-Dislikes
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/ryd.deb
+      #- name: Build Return-YouTube-Dislikes
+        #if: ${{ inputs.ryd }}
+        #run: |
+          #cd Return-YouTube-Dislikes
+          #make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          #mv packages/*.deb ${{ github.workspace }}/ryd.deb
 
       - name: Build YouGroupSettings
         run: |
@@ -335,18 +369,46 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytabconfig.deb
 
+      - name: Build YouQuality
+        if: ${{ inputs.youquality }}
+        run: |
+          cd YouQuality
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/youquality.deb
+
+      - name: Build YTFlags
+        if: ${{ inputs.ytflags }}
+        run: |
+          cd YTFlags
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless ADDITIONAL_CFLAGS="-Wno-error=incompatible-pointer-types"
+          mv packages/*.deb ${{ github.workspace }}/ytflags.deb
+
+      - name: Build YouSpeed
+        if: ${{ inputs.youspeed }}
+        run: |
+          cd YouSpeed
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/youspeed.deb
+
+      - name: Build ShowEndTime
+        if: ${{ inputs.showendtime }}
+        run: |
+          cd ShowEndTime
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/ShowEndTime.deb
+
       - name: Build UncappedAVPlayer
         run: |
           cd UncappedAVPlayer
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless ARCHS=arm64
           mv packages/*.deb ${{ github.workspace }}/uncapavplayer.deb
 
-      - name: Build DontEatMyContent
-        if: ${{ inputs.demc }}
-        run: |
-          cd DontEatMyContent
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/demc.deb
+      #- name: Build DontEatMyContent
+        #if: ${{ inputs.demc }}
+        #run: |
+          #cd DontEatMyContent
+          #make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          #mv packages/*.deb ${{ github.workspace }}/demc.deb
 
       - name: Build YouSlider
         if: ${{ inputs.youslider }}
@@ -362,12 +424,12 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
           mv packages/*.deb ${{ github.workspace }}/ytweaks.deb
           
-      - name: Build Gonerino
-        if: ${{ inputs.gonerino }}
-        run: |
-          cd Gonerino
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/gonerino.deb
+      #- name: Build Gonerino
+        #if: ${{ inputs.gonerino }}
+        #run: |
+          #cd Gonerino
+          #make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          #mv packages/*.deb ${{ github.workspace }}/gonerino.deb
 
       - name: Build youtube-native-share
         if: ${{ inputs.ytshare }}
@@ -377,19 +439,18 @@ jobs:
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless ARCHS=arm64
           mv packages/*.deb ${{ github.workspace }}/ytnativeshare.deb
 
+      - name: Build YouShare
+        run: |
+          cd YouShare
+          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
+          mv packages/*.deb ${{ github.workspace }}/youshare.deb
+
       - name: Build VolumeBoostYT
         if: ${{ inputs.volboost }}
         run: |
           cd VolumeBoostYT
           make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless ARCHS=arm64
           mv packages/*.deb ${{ github.workspace }}/volboostyt.deb
-
-      - name: Build YouQuality
-        if: ${{ inputs.youquality }}
-        run: |
-          cd YouQuality
-          make clean package DEBUG=0 FINALPACKAGE=1 THEOS_PACKAGE_SCHEME=rootless
-          mv packages/*.deb ${{ github.workspace }}/youquality.deb
           
       - name: Inject Tweaks Into IPA
         run: |
